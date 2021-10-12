@@ -52,7 +52,7 @@ const configurate = {
                                 //3.generar token para el empleado
                                 let user = results[0]
                                 jwt.sign({user}, 'secretkey', {expiresIn: '24h'}, (err, token) => {
-                                    if(err) throw err
+                                    if(err)
                                     res.json({
                                         token,status:"200"
                                     });
