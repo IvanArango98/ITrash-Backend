@@ -30,7 +30,7 @@ const configurate = {
 
     //0. obtener id de empleado con correo electrónico
     db.query(sqlStmt, (error, results) => {
-        if (error) console.log(error);
+        if (error) 
         if (results.length > 0){            
 
             let codEmpleado = results[0].CodigoEmpleado
@@ -38,7 +38,7 @@ const configurate = {
             
             //1. obtener contraseña actual del empleado
             db.query(sqlStmt, (error, results) => {
-                if (error) throw error;
+                if (error)
                 if (results.length > 0){
                     if(results[0].Contraseña == Contraseña) {
 
@@ -46,7 +46,7 @@ const configurate = {
                         
                         //2. obtener datos el empleado
                         db.query(sqlStmt, (error, results) => {
-                            if (error) throw error;
+                            if (error) 
                             if (results.length > 0){
 
                                 //3.generar token para el empleado
@@ -83,13 +83,13 @@ const configurate = {
   let sqlStmt = `SELECT CodigoEmpleado FROM correoempleado WHERE DireccionCorreo = '${DireccionCorreo}' AND Activo = 1`
   db.query(sqlStmt, (error, results)=>{
       
-      if(error) throw error;
+      if(error) 
       if (results.length > 0){
           var codigoEmpleado = results[0].CodigoEmpleado;
           sqlStmt = `SELECT Contraseña FROM bitacoracontraseña WHERE CodigoEmpleado = '${codigoEmpleado}' AND ISNULL(FechaFin)`;
           
           db.query(sqlStmt, (error, results) => {
-              if (error) throw error;
+              if (error) 
               if (results.length > 0){
                           //validar con todas las contraseñas, solo se está validando 
                   if(results[0].Contraseña == ContraseñaActual){
@@ -97,12 +97,11 @@ const configurate = {
                           //Finalizar contraseña previa
                           sqlStmt = `UPDATE BitacoraContraseña SET FechaFin = NOW() WHERE CodigoEmpleado = '${codigoEmpleado}' AND FechaFin IS NULL`;
                           db.query(sqlStmt, (error, results) =>{
-                              if (error) throw error;
+                              if (error) 
                                   sqlStmt = "INSERT INTO BitacoraContraseña (CodigoEmpleado, Contraseña, FechaInicio) VALUES (?,?,NOW())";
                                   db.query(sqlStmt,[codigoEmpleado, contraseñaNueva] , (error, results) =>{
                                       if (error) {                                            
-                                        res.send(JSON.stringify({msg:'Ocurrrio un error actualizando su contraseña, vuelva a intentarlo',status:"500"}));
-                                          throw error
+                                        res.send(JSON.stringify({msg:'Ocurrrio un error actualizando su contraseña, vuelva a intentarlo',status:"500"}));                                          
                                       } else {
                                         res.send(JSON.stringify({msg:'Contraseña actualizada exitosamente',status:"200"}));
                                       }
