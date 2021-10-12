@@ -17,10 +17,10 @@ const connection = mysql.createConnection({
     database: 'itrash',  
   });
 
-  connection.connect(error => {
-    if (error) throw error;
-    console.log('Database server running!');
-});
+//   connection.connect(error => {
+//     if (error) throw error;
+//     console.log('Database server running!');
+// });
    
 //rutas
     exports.Login = function(req,res,next) {  
