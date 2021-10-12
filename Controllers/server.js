@@ -16,6 +16,8 @@ const configurate = {
 }
 
 const db = mysql.createConnection(configurate);
+connection.connect(error => {    
+});
 
 exports.Create = function(req,res,next)
 {
