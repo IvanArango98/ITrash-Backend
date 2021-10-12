@@ -17,7 +17,8 @@ const connection = mysql.createConnection({
     database: 'itrash',  
   });
 
-
+  connection.connect(error => {    
+});
    
 //rutas
     exports.Login = function(req,res,next) {  
