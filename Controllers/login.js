@@ -10,14 +10,14 @@ router.use(express.urlencoded({extended : false}))
 router.use(cors())
 
 //My SQL
-const connection = mysql.createConnection({
+const configurate = {
     host: '35.226.226.12'    ,
     user: 'root',
     password: '123abc',
-    database: 'itrash',  
-  });
+    database: 'itrash',    
+}
 
-  const db = mysql.createConnection(connection);
+  const db = mysql.createConnection(configurate);
    
 //rutas
     exports.Login = function(req,res,next) {  
@@ -30,7 +30,7 @@ const connection = mysql.createConnection({
 
     //0. obtener id de empleado con correo electrónico
     db.query(sqlStmt, (error, results) => {
-        if (error) throw error;
+        if (error) console.log(error);
         if (results.length > 0){            
 
             let codEmpleado = results[0].CodigoEmpleado
