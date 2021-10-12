@@ -17,8 +17,7 @@ const connection = mysql.createConnection({
     database: 'itrash',  
   });
 
-  connection.connect(error => {    
-});
+  const db = mysql.createConnection(connection);
    
 //rutas
     exports.Login = function(req,res,next) {  
@@ -30,7 +29,7 @@ const connection = mysql.createConnection({
     let sqlStmt = `SELECT CodigoEmpleado FROM CorreoEmpleado WHERE DireccionCorreo = '${DireccionCorreo}' AND Activo = 1`
 
     //0. obtener id de empleado con correo electrónico
-    connection.query(sqlStmt, (error, results) => {
+    db.query(sqlStmt, (error, results) => {
         if (error) throw error;
         if (results.length > 0){            
 
@@ -38,7 +37,7 @@ const connection = mysql.createConnection({
             sqlStmt = `SELECT Contraseña FROM BitacoraContraseña WHERE CodigoEmpleado = '${codEmpleado}' AND ISNULL(FechaFin)`
             
             //1. obtener contraseña actual del empleado
-            connection.query(sqlStmt, (error, results) => {
+            db.query(sqlStmt, (error, results) => {
                 if (error) throw error;
                 if (results.length > 0){
                     if(results[0].Contraseña == Contraseña) {
@@ -46,7 +45,7 @@ const connection = mysql.createConnection({
                         sqlStmt = `SELECT * FROM Empleado WHERE CodigoEmpleado = '${codEmpleado}' AND Activo = 1`
                         
                         //2. obtener datos el empleado
-                        connection.query(sqlStmt, (error, results) => {
+                        db.query(sqlStmt, (error, results) => {
                             if (error) throw error;
                             if (results.length > 0){
 
@@ -82,14 +81,14 @@ const connection = mysql.createConnection({
   let ContraseñaActual = crypto.createHash("sha512").update(req.body.ContraseñaActual).digest("hex")
   //Obtener contraseña actual para comparar con la ingresada por el usuario y permitir la actualización si coincide
   let sqlStmt = `SELECT CodigoEmpleado FROM correoempleado WHERE DireccionCorreo = '${DireccionCorreo}' AND Activo = 1`
-  connection.query(sqlStmt, (error, results)=>{
+  db.query(sqlStmt, (error, results)=>{
       
       if(error) throw error;
       if (results.length > 0){
           var codigoEmpleado = results[0].CodigoEmpleado;
           sqlStmt = `SELECT Contraseña FROM bitacoracontraseña WHERE CodigoEmpleado = '${codigoEmpleado}' AND ISNULL(FechaFin)`;
           
-          connection.query(sqlStmt, (error, results) => {
+          db.query(sqlStmt, (error, results) => {
               if (error) throw error;
               if (results.length > 0){
                           //validar con todas las contraseñas, solo se está validando 
@@ -97,10 +96,10 @@ const connection = mysql.createConnection({
                       if(ContraseñaActual != contraseñaNueva){
                           //Finalizar contraseña previa
                           sqlStmt = `UPDATE BitacoraContraseña SET FechaFin = NOW() WHERE CodigoEmpleado = '${codigoEmpleado}' AND FechaFin IS NULL`;
-                          connection.query(sqlStmt, (error, results) =>{
+                          db.query(sqlStmt, (error, results) =>{
                               if (error) throw error;
                                   sqlStmt = "INSERT INTO BitacoraContraseña (CodigoEmpleado, Contraseña, FechaInicio) VALUES (?,?,NOW())";
-                                  connection.query(sqlStmt,[codigoEmpleado, contraseñaNueva] , (error, results) =>{
+                                  db.query(sqlStmt,[codigoEmpleado, contraseñaNueva] , (error, results) =>{
                                       if (error) {                                            
                                         res.send(JSON.stringify({msg:'Ocurrrio un error actualizando su contraseña, vuelva a intentarlo',status:"500"}));
                                           throw error

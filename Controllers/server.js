@@ -3,7 +3,6 @@ const router = express.Router()
 const mysql = require('mysql');
 const cors = require("cors")
 const crypto = require("crypto");
-const { isGeneratorFunction } = require('util/types');
 
 router.use(express.json())
 router.use(express.urlencoded({extended : false}))
