@@ -1,11 +1,5 @@
-#!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
-
 var app = require('../app');
-var debug = require('debug')('backend:server');
+var debug = require('debug')('pw-backend:server');
 var http = require('http');
 
 /**
