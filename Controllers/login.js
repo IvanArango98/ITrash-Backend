@@ -17,9 +17,7 @@ const connection = mysql.createConnection({
     database: 'itrash',  
   });
 
-  connection.connect(error => {
-    if (error) throw error;
-   
+  connection.connect(error => {    
 });
    
 //rutas
