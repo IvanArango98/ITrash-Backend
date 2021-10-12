@@ -3,6 +3,7 @@ const router = express.Router()
 const mysql = require('mysql');
 const cors = require("cors")
 const crypto = require("crypto");
+const { isGeneratorFunction } = require('util/types');
 
 router.use(express.json())
 router.use(express.urlencoded({extended : false}))
@@ -407,7 +408,13 @@ exports.Read = function(req,res,next) {
         db.query(sqlSelect,(err,result) => {
             if(err !== undefined)
             {            
+                if(result !== undefined)
+                {
                 res.send(JSON.stringify({resultado: result, mensaje: `GET EXITOSO DE LA TABLA ${NombreTabla}`,status:"200"}))      
+                }
+                else{
+                    res.send(JSON.stringify({error: `No se ha podido obtener bien los datos dentro de la tabla ${NombreTabla}`,status:"400"}))      
+                }
             }
             else
             {
@@ -427,7 +434,14 @@ exports.Delete = function(req,res,next) {
     db.query(sqlDelete,PrimaryKey, (err, result) => {
         if(err !== undefined)
             {            
+
+                if(result !== undefined)
+                {
                 res.send(JSON.stringify({resultado: result, mensaje: `Registro eliminado exitoso de la tabla ${NombreTabla}`,status:"200"}))      
+                }
+                else{
+                res.send(JSON.stringify({error: `No se ha podido eliminar bien los datos dentro de la tabla ${NombreTabla}`,status:"400"}))      
+                }
             }
             else
             {
@@ -456,13 +470,18 @@ exports.Update = function(req,res,next)
     Valores = Valores.substring(0,Valores.length - 1)
     
 
-    let sqlUpdate = `UPDATE ${NombreTabla} SET ${Valores} WHERE ${PrimaryKeyName} = ${PrimaryKey}`
-    console.log(sqlUpdate)
+    let sqlUpdate = `UPDATE ${NombreTabla} SET ${Valores} WHERE ${PrimaryKeyName} = ${PrimaryKey}`    
 
     db.query(sqlUpdate, (err, result) => {
         if(err !== undefined)
-        {            
+        {     
+            if(result !== undefined)       
+            {
             res.send(JSON.stringify({resultado: result, mensaje: `Registro actualizado exitosamente de la tabla ${NombreTabla}`,status:"200"}))      
+            }
+            else{
+                res.send(JSON.stringify({error: `No se ha podido actualizar bien los datos dentro de la tabla ${NombreTabla}`,status:"400"}))      
+            }
         }
         else
         {
